@@ -8,9 +8,7 @@ public class DayAndNight {
 	private Player playerRed = new PlayerRed();
 	private Player playerBlue = new PlayerBlue();
 	private Random random = new Random();
-	private int scoreRed;
-	private int scoreBlue;
-	private int scoreWhite;
+	private GameScore gameScore = new GameScore();
 	
 	Coordinate[] directions = {
 		new Coordinate(+1, -1,  0), new Coordinate(+1,  0, -1), new Coordinate( 0, +1, -1),
@@ -41,17 +39,16 @@ public class DayAndNight {
 		hexagons.add(new Hexagon(-2, 0, 2));
 		hexagons.add(new Hexagon(-1, -1, 2));
 		hexagons.add(new Hexagon(0, -2, 2));
-		
-		playGame();
 	}
 	
-	private void playGame() {
+	GameScore playGame() {
 		Player currentPlayer = playerRed;
 		do {
 			playCardRandomly(currentPlayer);
 			currentPlayer = selectNextPlayer(currentPlayer);
 		} while (playerRed.hasCards() || playerBlue.hasCards());
 		scorePlayfield();
+		return gameScore;
 	}
 	
 	private void scorePlayfield() {
@@ -59,21 +56,21 @@ public class DayAndNight {
 		for (int i = 0; i <= numberOfFields - 1; i++) {
 				switch (hexagons.get(i).color) {
 				case RED:
-					scoreRed++;
+					gameScore.scoreRed++;
 					break;
 				case BLUE:
-					scoreBlue++;
+					gameScore.scoreBlue++;
 					break;
 				case WHITE:
-					scoreWhite++;
+					gameScore.scoreWhite++;
 					break;
 				default:
 					break;
 				}
 		}
-		System.out.print("Red: " + scoreRed + " | ");
-		System.out.print("Blue: " + scoreBlue + " | ");
-		System.out.print("White: " + scoreWhite + "\n");
+		System.out.print("Red: " + gameScore.scoreRed + " | ");
+		System.out.print("Blue: " + gameScore.scoreBlue + " | ");
+		System.out.print("White: " + gameScore.scoreWhite + "\n");
 	}
 
 	private Player selectNextPlayer(Player currentPlayer) {
@@ -131,8 +128,12 @@ public class DayAndNight {
 	}
 
 	public static void main(String[] args) {
-		DayAndNight dan = new DayAndNight();
-		System.out.println(dan);
+		GameStatistics statistics = new GameStatistics();
+		for (int i = 0; i < 10000; i++) {
+			DayAndNight dan = new DayAndNight();
+			statistics.gameScores.add(dan.playGame());
+		}
+		statistics.showStatistics();
 	}
 	
 	@Override

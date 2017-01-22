@@ -8,6 +8,9 @@ public class DayAndNight {
 	private Player playerRed = new PlayerRed();
 	private Player playerBlue = new PlayerBlue();
 	private Random random = new Random();
+	private int scoreRed;
+	private int scoreBlue;
+	private int scoreWhite;
 	
 	Coordinate[] directions = {
 		new Coordinate(+1, -1,  0), new Coordinate(+1,  0, -1), new Coordinate( 0, +1, -1),
@@ -48,7 +51,29 @@ public class DayAndNight {
 			playCardRandomly(currentPlayer);
 			currentPlayer = selectNextPlayer(currentPlayer);
 		} while (playerRed.hasCards() || playerBlue.hasCards());
-		
+		scorePlayfield();
+	}
+	
+	private void scorePlayfield() {
+		int numberOfFields = hexagons.size();
+		for (int i = 0; i <= numberOfFields - 1; i++) {
+				switch (hexagons.get(i).color) {
+				case RED:
+					scoreRed++;
+					break;
+				case BLUE:
+					scoreBlue++;
+					break;
+				case WHITE:
+					scoreWhite++;
+					break;
+				default:
+					break;
+				}
+		}
+		System.out.print("Red: " + scoreRed + " | ");
+		System.out.print("Blue: " + scoreBlue + " | ");
+		System.out.print("White: " + scoreWhite + "\n");
 	}
 
 	private Player selectNextPlayer(Player currentPlayer) {
